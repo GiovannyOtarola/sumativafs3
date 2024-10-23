@@ -1,4 +1,4 @@
-package com.example.sumativafs3;
+package com.example.sumativafs3A;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
