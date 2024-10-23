@@ -5,10 +5,11 @@ import java.util.Optional;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.stereotype.Service;
 import com.example.sumativafs3A.model.Usuario;
 import com.example.sumativafs3A.repository.UsuarioRepository;
 
+@Service
 public class UsuarioService {
 
     @Autowired
@@ -16,7 +17,7 @@ public class UsuarioService {
 
     @Autowired
     private  PasswordEncoder passwordEncoder;
-    
+
 
     public Usuario crearUsuario(Usuario usuario) {
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword())); // Encriptar la contraseña
