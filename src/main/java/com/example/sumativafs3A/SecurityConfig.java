@@ -2,28 +2,25 @@ package com.example.sumativafs3A;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 import com.example.sumativafs3A.model.Usuario;
-import com.example.sumativafs3A.repository.UsuarioRepository;
+import com.example.sumativafs3A.service.UsuarioService;
+import org.springframework.security.config.Customizer;
 
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 import java.util.Optional;
-
 
 
 
@@ -32,49 +29,50 @@ import java.util.Optional;
 public class SecurityConfig {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
-    
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    private UsuarioService usuarioService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/usuarios/**").hasRole("admin") 
-                                .anyRequest().authenticated() 
-                )
-                .httpBasic(withDefaults()); 
-
-        return http.build(); 
+            .csrf(csrf -> csrf
+            .ignoringRequestMatchers("/api/usuarios/**") // deshabilitar csrf para la api
+            )
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.GET, "/api/usuarios/**").authenticated()  // GET permitido para usuarios autenticados
+                .requestMatchers(HttpMethod.POST, "/api/usuarios/**").hasRole("admin") // POST permitido solo para admin
+                .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasRole("admin")  // PUT permitido solo para admin
+                .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasRole("admin") // DELETE solo para admin
+                .anyRequest().authenticated()
+            )
+            .httpBasic(Customizer.withDefaults());  
+    
+        return http.build();
     }
 
     @Bean
-    public AuthenticationManager authManager() throws Exception {
-        return new AuthenticationManager() {
-            @Override
-            public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-                String nombre = authentication.getName(); // Usar el nombre como identificador
-                String password = (String) authentication.getCredentials();
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = 
+            http.getSharedObject(AuthenticationManagerBuilder.class);
 
-                // Busca el usuario en la base de datos
-                Optional<Usuario> usuarioOptional = usuarioRepository.findByNombre(nombre);
+        authenticationManagerBuilder.userDetailsService(userDetailsService());
 
-                if (usuarioOptional.isPresent()) {
-                    Usuario usuario = usuarioOptional.get();
-                    if (passwordEncoder().matches(password, usuario.getPassword())) {
-                        // Aquí puedes construir una autenticación válida
-                        return new UsernamePasswordAuthenticationToken(usuario, password, 
-                            AuthorityUtils.createAuthorityList("ROLE_" + usuario.getRol()));
-                    } else {
-                        throw new BadCredentialsException("Contraseña incorrecta");
-                    }
-                } else {
-                    throw new UsernameNotFoundException("Usuario no encontrado");
-                }
-            }
-        };
+        return authenticationManagerBuilder.build();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+    return username -> {
+        Optional<Usuario> usuarioOptional = usuarioService.obtenerUsuarioPorNombre(username);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            return new org.springframework.security.core.userdetails.User(
+                usuario.getNombre(),
+                "{noop}" + usuario.getPassword(), // Indica que la contraseña no esta codificada
+                AuthorityUtils.createAuthorityList("ROLE_" + usuario.getRol())
+            );
+        } else {
+            throw new UsernameNotFoundException("Usuario no encontrado");
+        }
+    };
     }
 }

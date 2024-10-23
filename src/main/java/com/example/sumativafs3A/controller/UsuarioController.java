@@ -1,11 +1,13 @@
 package com.example.sumativafs3A.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.sumativafs3A.service.*;
 import com.example.sumativafs3A.model.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -26,16 +28,16 @@ public class UsuarioController {
     // Obtener usuario por ID
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> obtenerUsuarioPorId(@PathVariable Long id) {
-        Usuario usuario = usuarioService.obtenerUsuarioPorId(id);
-        return ResponseEntity.ok(usuario);
+         Optional<Usuario> usuario = usuarioService.obtenerUsuarioPorId(id);
+        return usuario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // Actualizar usuario
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
-        usuario.setId(id); 
-        Usuario usuarioActualizado = usuarioService.actualizarUsuario(usuario);
-        return ResponseEntity.ok(usuarioActualizado);
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioDetalles) {
+        Optional<Usuario> usuarioActualizado = usuarioService.actualizarUsuario(id, usuarioDetalles);
+
+        return usuarioActualizado.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // Eliminar usuario
@@ -45,7 +47,7 @@ public class UsuarioController {
         return ResponseEntity.noContent().build(); 
     }
 
-    // Obtener todos los usuarios (opcional)
+    // Obtener todos los usuarios 
     @GetMapping
     public ResponseEntity<List<Usuario>> obtenerTodosLosUsuarios() {
         List<Usuario> usuarios = usuarioService.obtenerTodosLosUsuarios();
