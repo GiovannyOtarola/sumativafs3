@@ -20,7 +20,7 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
         Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
-        return ResponseEntity.status(201).body(nuevoUsuario); // 201 Created
+        return ResponseEntity.status(201).body(nuevoUsuario); 
     }
 
     // Obtener usuario por ID
@@ -33,7 +33,7 @@ public class UsuarioController {
     // Actualizar usuario
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
-        usuario.setId(id); // Asegurarse de que el ID en la solicitud es el correcto
+        usuario.setId(id); 
         Usuario usuarioActualizado = usuarioService.actualizarUsuario(usuario);
         return ResponseEntity.ok(usuarioActualizado);
     }
@@ -42,7 +42,7 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
         usuarioService.eliminarUsuario(id);
-        return ResponseEntity.noContent().build(); // 204 No Content
+        return ResponseEntity.noContent().build(); 
     }
 
     // Obtener todos los usuarios (opcional)

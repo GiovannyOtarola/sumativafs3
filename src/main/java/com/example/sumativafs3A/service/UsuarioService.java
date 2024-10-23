@@ -41,6 +41,12 @@ public class UsuarioService {
         }
     }
 
+    // Obtener un usuario por su nombre
+    public Usuario obtenerUsuarioPorNombre(String nombre) {
+        return usuarioRepository.findByNombre(nombre)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con nombre: " + nombre));
+    }
+    
     public List<Usuario> obtenerTodosLosUsuarios() {
         return usuarioRepository.findAll();
     }
