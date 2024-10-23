@@ -49,6 +49,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    //autenticacion usuarios
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = 
@@ -59,6 +60,7 @@ public class SecurityConfig {
         return authenticationManagerBuilder.build();
     }
 
+    //recuperar informacion usuario basado en el nombre
     @Bean
     public UserDetailsService userDetailsService() {
     return username -> {
