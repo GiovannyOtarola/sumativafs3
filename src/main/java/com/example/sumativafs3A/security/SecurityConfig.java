@@ -1,4 +1,4 @@
-package com.example.sumativafs3A;
+package com.example.sumativafs3A.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,18 +31,32 @@ public class SecurityConfig {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint; // Inyectar el manejador de 401
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
         .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para facilitar pruebas
             .authorizeHttpRequests(auth -> auth
+                //
                 .requestMatchers(HttpMethod.GET, "/api/usuarios/**").authenticated()  // GET permitido para usuarios autenticados
                 .requestMatchers(HttpMethod.POST, "/api/usuarios/**").hasRole("admin") // POST permitido solo para admin
                 .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasRole("admin")  // PUT permitido solo para admin
                 .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasRole("admin") // DELETE solo para admin
-                .requestMatchers(HttpMethod.DELETE, "/api/login/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/login/**").permitAll()
+                // seguridad endpoint Microservicio Gestion de productos
+                .requestMatchers(HttpMethod.GET, "/api/productos/**").authenticated() 
+                .requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole("admin")
+                .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole("admin") 
+                .requestMatchers(HttpMethod.PUT, "/api/prductos/**").hasRole("admin")
+            
                 .anyRequest().authenticated()
             )
+            .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(customAuthenticationEntryPoint) // Usar manejador personalizado para
+                                                                                  // 401 Unauthorized
+            )        
             .httpBasic(Customizer.withDefaults());  
     
         return http.build();
