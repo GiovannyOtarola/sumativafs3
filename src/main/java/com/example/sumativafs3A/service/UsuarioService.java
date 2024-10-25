@@ -23,26 +23,17 @@ public class UsuarioService {
         return usuarioRepository.findById(id);
     }
 
-    public Optional<Usuario> actualizarUsuario(Long id, Usuario usuarioDetalles) {
-        return usuarioRepository.findById(id).map(usuarioExistente -> {
-            usuarioExistente.setNombre(usuarioDetalles.getNombre());
-            usuarioExistente.setPassword(usuarioExistente.getPassword());
-            usuarioExistente.setRol(usuarioExistente.getRol());
-            return usuarioRepository.save(usuarioExistente); 
-        });
-    }
-
 
     public List<Usuario> obtenerTodosLosUsuarios() {
         return usuarioRepository.findAll();
     }
 
+    public Usuario guardUsuario(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
+
     public void eliminarUsuario(Long id) {
-        if (usuarioRepository.existsById(id)) {
-            usuarioRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Usuario no encontrado");
-        }
+         usuarioRepository.deleteById(id);
     }
 
     public Optional<Usuario> obtenerUsuarioPorNombre(String nombre) {
