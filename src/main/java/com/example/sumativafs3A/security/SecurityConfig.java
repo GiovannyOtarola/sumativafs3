@@ -39,7 +39,7 @@ public class SecurityConfig {
         http
         .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para facilitar pruebas
             .authorizeHttpRequests(auth -> auth
-                //
+                // seguridad endpoint Microservicio Usuarios y login
                 .requestMatchers(HttpMethod.GET, "/api/usuarios/**").authenticated()  // GET permitido para usuarios autenticados
                 .requestMatchers(HttpMethod.POST, "/api/usuarios/**").hasRole("admin") // POST permitido solo para admin
                 .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasRole("admin")  // PUT permitido solo para admin
