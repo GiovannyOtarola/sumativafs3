@@ -34,10 +34,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf
-            .ignoringRequestMatchers("/api/usuarios/**") // deshabilitar csrf para la api
-            .ignoringRequestMatchers("/api/login/**")
-            )
+        .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para facilitar pruebas
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.GET, "/api/usuarios/**").authenticated()  // GET permitido para usuarios autenticados
                 .requestMatchers(HttpMethod.POST, "/api/usuarios/**").hasRole("admin") // POST permitido solo para admin
