@@ -45,11 +45,6 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasRole("admin")  // PUT permitido solo para admin
                 .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasRole("admin") // DELETE solo para admin
                 .requestMatchers(HttpMethod.POST, "/api/login/**").permitAll()
-                // seguridad endpoint Microservicio Gestion de productos
-                .requestMatchers(HttpMethod.GET, "/api/productos/**").authenticated() 
-                .requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole("admin")
-                .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole("admin") 
-                .requestMatchers(HttpMethod.PUT, "/api/prductos/**").hasRole("admin")
             
                 .anyRequest().authenticated()
             )
