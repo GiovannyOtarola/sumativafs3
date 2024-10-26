@@ -1,4 +1,4 @@
-package com.example.sumativafs3A.model;
+package com.example.sumativafs3.model;
 import lombok.Getter;
 import lombok.Setter;
 

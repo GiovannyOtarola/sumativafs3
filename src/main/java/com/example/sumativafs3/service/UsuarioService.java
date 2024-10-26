@@ -1,4 +1,4 @@
-package com.example.sumativafs3A.service;
+package com.example.sumativafs3.service;
 
 import java.util.Optional;
 
@@ -6,8 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-import com.example.sumativafs3A.model.Usuario;
-import com.example.sumativafs3A.repository.UsuarioRepository;
+
+import com.example.sumativafs3.model.Usuario;
+import com.example.sumativafs3.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {

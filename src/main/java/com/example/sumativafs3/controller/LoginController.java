@@ -1,4 +1,4 @@
-package com.example.sumativafs3A.controller;
+package com.example.sumativafs3.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.sumativafs3A.model.*;
+import com.example.sumativafs3.model.*;
 
 
 @RestController

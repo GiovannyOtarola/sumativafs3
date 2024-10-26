@@ -1,16 +1,17 @@
-package com.example.sumativafs3A.controller;
+package com.example.sumativafs3.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.sumativafs3A.service.*;
+
+import com.example.sumativafs3.exception.ResourceNotFoundException;
+import com.example.sumativafs3.model.*;
+import com.example.sumativafs3.service.*;
 
 import jakarta.validation.Valid;
 
-import com.example.sumativafs3A.exception.ResourceNotFoundException;
-import com.example.sumativafs3A.model.*;
 import java.util.List;
 
 

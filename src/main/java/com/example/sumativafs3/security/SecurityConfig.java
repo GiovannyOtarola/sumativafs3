@@ -1,4 +1,4 @@
-package com.example.sumativafs3A.security;
+package com.example.sumativafs3.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,15 +8,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.example.sumativafs3.model.Usuario;
+import com.example.sumativafs3.service.UsuarioService;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
-import com.example.sumativafs3A.model.Usuario;
-import com.example.sumativafs3A.service.UsuarioService;
 import org.springframework.security.config.Customizer;
 
 
